@@ -42,6 +42,20 @@ def add_task():
         messagebox.showwarning("Input Error", "Task cannot be empty!")
 
 
+def add_task_from_input(event=None):
+    task = task_entry.get().strip()  # Get the text from the input field
+    if task:  # Ensure the input is not empty
+        with sqlite3.connect(DB_NAME) as conn:
+            cursor = conn.cursor()
+            cursor.execute("INSERT INTO tasks (task, completed) VALUES (?, ?)", (task, 0))  # Add task to database
+            conn.commit()
+
+        # Update the listbox with the new task
+        task_listbox.insert(tk.END, task)
+        task_entry.delete(0, tk.END)  # Clear the input field
+    else:
+        messagebox.showwarning("Input Error", "Task cannot be empty!")
+
 def remove_task():
     selected_task_index = task_listbox.curselection()
     if selected_task_index:
@@ -155,6 +169,10 @@ task_entry.pack(side=tk.LEFT, padx=10)
 add_button = tk.Button(input_frame, text="Add Task", command=add_task, bg="#0078d4", fg="white",
                        font=("Arial", 12, "bold"), relief="flat", width=12)
 add_button.pack(side=tk.LEFT, padx=5)
+
+# Binding the Enter key to the task-adding function
+task_entry.bind("<Return>", add_task_from_input)
+
 
 # Task list display
 task_listbox = tk.Listbox(app, width=50, height=15, font=("Arial", 12), bd=0, bg="#fff", selectbackground="#6ba5ff",
