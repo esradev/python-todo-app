@@ -115,38 +115,46 @@ def edit_task():
 # Create main application window
 app = tk.Tk()
 app.title("To-Do List")
-app.geometry("400x500")
+app.geometry("600x500")
+app.config(bg="#f4f4f9")  # Set background color
 
 task_ids = []
 
 # Task input frame
-input_frame = tk.Frame(app)
+input_frame = tk.Frame(app, bg="#f4f4f9")
 input_frame.pack(pady=10)
 
-task_entry = tk.Entry(input_frame, width=30)
-task_entry.pack(side=tk.LEFT, padx=5)
+task_entry = tk.Entry(input_frame, width=30, font=("Arial", 14), bd=2, relief="solid", highlightthickness=2,
+                      highlightbackground="#0078d4")
+task_entry.pack(side=tk.LEFT, padx=10)
 
-add_button = tk.Button(input_frame, text="Add Task", command=add_task)
-add_button.pack(side=tk.LEFT)
+add_button = tk.Button(input_frame, text="Add Task", command=add_task, bg="#0078d4", fg="white",
+                       font=("Arial", 12, "bold"), relief="flat", width=12)
+add_button.pack(side=tk.LEFT, padx=5)
 
 # Task list display
-task_listbox = tk.Listbox(app, width=50, height=15)
+task_listbox = tk.Listbox(app, width=50, height=15, font=("Arial", 12), bd=0, bg="#fff", selectbackground="#6ba5ff",
+                          selectforeground="black")
 task_listbox.pack(pady=10)
 
 # Action buttons frame
-button_frame = tk.Frame(app)
+button_frame = tk.Frame(app, bg="#f4f4f9")
 button_frame.pack(pady=10)
 
-edit_button = tk.Button(button_frame, text="Edit Task", command=edit_task)
+edit_button = tk.Button(button_frame, text="Edit Task", command=edit_task, bg="#f0ad4e", fg="white", font=("Arial", 12),
+                        relief="flat", width=12)
 edit_button.pack(side=tk.LEFT, padx=5)
 
-mark_button = tk.Button(button_frame, text="Mark Completed", command=mark_as_completed)
+mark_button = tk.Button(button_frame, text="Mark Completed", command=mark_as_completed, bg="#5bc0de", fg="white",
+                        font=("Arial", 12), relief="flat", width=12)
 mark_button.pack(side=tk.LEFT, padx=5)
 
-remove_button = tk.Button(button_frame, text="Remove Task", command=remove_task)
+remove_button = tk.Button(button_frame, text="Remove Task", command=remove_task, bg="#d9534f", fg="white",
+                          font=("Arial", 12), relief="flat", width=12)
 remove_button.pack(side=tk.LEFT, padx=5)
 
-clear_button = tk.Button(button_frame, text="Clear All", command=clear_all_tasks)
+clear_button = tk.Button(button_frame, text="Clear All", command=clear_all_tasks, bg="#d9534f", fg="white",
+                         font=("Arial", 12), relief="flat", width=12)
 clear_button.pack(side=tk.LEFT, padx=5)
 
 # Initialize database and load tasks
