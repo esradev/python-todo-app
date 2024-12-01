@@ -85,10 +85,34 @@ def mark_as_completed():
             cursor = conn.cursor()
             cursor.execute("UPDATE tasks SET completed = 1 WHERE id = ?", (task_id,))
         task = task_listbox.get(selected_task_index)
+        # Check if the task is already marked as completed
+        if "[✔]" in task:
+            return
+
         task_listbox.delete(selected_task_index)
         task_listbox.insert(selected_task_index, f"[✔] {task}")
     else:
         messagebox.showwarning("Selection Error", "Please select a task to mark as completed.")
+
+
+def mark_as_incomplete():
+    selected_task_index = task_listbox.curselection()
+    if selected_task_index:
+        task_id = task_ids[selected_task_index[0]]
+        with sqlite3.connect(DB_NAME) as conn:
+            cursor = conn.cursor()
+            cursor.execute("UPDATE tasks SET completed = 0 WHERE id = ?", (task_id,))
+
+        # Check if the task is already marked as incomplete
+        task = task_listbox.get(selected_task_index)
+        if "[✔]" not in task:
+            return
+
+        # Get the current task and update it
+        task_listbox.delete(selected_task_index)
+        task_listbox.insert(selected_task_index, task.replace("[✔] ", ""))
+    else:
+        messagebox.showwarning("Selection Error", "Please select a task to mark as incomplete.")
 
 
 def edit_task():
@@ -141,21 +165,21 @@ task_listbox.pack(pady=10)
 button_frame = tk.Frame(app, bg="#f4f4f9")
 button_frame.pack(pady=10)
 
-edit_button = tk.Button(button_frame, text="Edit Task", command=edit_task, bg="#f0ad4e", fg="white", font=("Arial", 12),
-                        relief="flat", width=12)
+edit_button = tk.Button(button_frame, text="Edit", command=edit_task, bg="#f0ad4e", fg="white", font=("Arial", 12), relief="flat", width=12)
 edit_button.pack(side=tk.LEFT, padx=5)
 
-mark_button = tk.Button(button_frame, text="Mark Completed", command=mark_as_completed, bg="#5bc0de", fg="white",
-                        font=("Arial", 12), relief="flat", width=12)
+mark_button = tk.Button(button_frame, text="Completed", command=mark_as_completed, bg="#5bc0de", fg="white", font=("Arial", 12), relief="flat", width=12)
 mark_button.pack(side=tk.LEFT, padx=5)
 
-remove_button = tk.Button(button_frame, text="Remove Task", command=remove_task, bg="#d9534f", fg="white",
-                          font=("Arial", 12), relief="flat", width=12)
+unmark_button = tk.Button(button_frame, text="Incomplete", command=mark_as_incomplete, bg="#d9534f", fg="white", font=("Arial", 12), relief="flat", width=12)
+unmark_button.pack(side=tk.LEFT, padx=5)
+
+remove_button = tk.Button(button_frame, text="Remove", command=remove_task, bg="#d9534f", fg="white", font=("Arial", 12), relief="flat", width=12)
 remove_button.pack(side=tk.LEFT, padx=5)
 
-clear_button = tk.Button(button_frame, text="Clear All", command=clear_all_tasks, bg="#d9534f", fg="white",
-                         font=("Arial", 12), relief="flat", width=12)
+clear_button = tk.Button(button_frame, text="Clear All", command=clear_all_tasks, bg="#d9534f", fg="white", font=("Arial", 12), relief="flat", width=12)
 clear_button.pack(side=tk.LEFT, padx=5)
+
 
 # Initialize database and load tasks
 setup_database()
