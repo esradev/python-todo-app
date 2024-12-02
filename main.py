@@ -36,11 +36,12 @@ def add_task():
         with sqlite3.connect(DB_NAME) as conn:
             cursor = conn.cursor()
             cursor.execute("INSERT INTO tasks (task, completed) VALUES (?, 0)", (task,))
+            task_id = cursor.lastrowid  # Get the ID of the newly inserted task
         task_listbox.insert(tk.END, task)
+        task_ids.append(task_id)  # Add the new task ID to the list
         task_entry.delete(0, tk.END)
     else:
         messagebox.showwarning("Input Error", "Task cannot be empty!")
-
 
 def add_task_from_input(event=None):
     task = task_entry.get().strip()  # Get the text from the input field
@@ -48,10 +49,12 @@ def add_task_from_input(event=None):
         with sqlite3.connect(DB_NAME) as conn:
             cursor = conn.cursor()
             cursor.execute("INSERT INTO tasks (task, completed) VALUES (?, ?)", (task, 0))  # Add task to database
+            task_id = cursor.lastrowid  # Get the ID of the newly inserted task
             conn.commit()
 
         # Update the listbox with the new task
         task_listbox.insert(tk.END, task)
+        task_ids.append(task_id)  # Add the new task ID to the list
         task_entry.delete(0, tk.END)  # Clear the input field
     else:
         messagebox.showwarning("Input Error", "Task cannot be empty!")
